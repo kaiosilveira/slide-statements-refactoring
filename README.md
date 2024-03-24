@@ -1,4 +1,4 @@
-[![Continuous Integration](https://github.com/kaiosilveira/refactoring-catalog-template/actions/workflows/ci.yml/badge.svg)](https://github.com/kaiosilveira/refactoring-catalog-template/actions/workflows/ci.yml)
+[![Continuous Integration](https://github.com/kaiosilveira/slide-statements-refactoring/actions/workflows/ci.yml/badge.svg)](https://github.com/kaiosilveira/slide-statements-refactoring/actions/workflows/ci.yml)
 
 # Refactoring catalog repository template
 
@@ -6,25 +6,7 @@ This is a quick template to help me get a new refactoring repo going.
 
 ## Things to do after creating a repo off of this template
 
-1. Replace `[REPOSITORY_NAME]` with the actual repository name
-
-2. Set the text in the project description in GitHub to
-
-```
-Working example with detailed commit history on the "[REPOSITORY_NAME]" refactoring based on Fowler's "Refactoring" book
-```
-
 3. Replace the lorem ipsum text sections below with actual text
-
-4. Configure the CI badge:
-
-```
-[![Continuous Integration](https://github.com/kaiosilveira/[REPOSITORY_NAME]/actions/workflows/ci.yml/badge.svg)](https://github.com/kaiosilveira/[REPOSITORY_NAME]/actions/workflows/ci.yml)
-```
-
-5. Add https://github.com/kaiosilveira/refactoring as the website link
-
-6. Add labels: javascript, refactoring, [REPOSITORY_NAME]
 
 ## Useful commands
 
@@ -37,7 +19,7 @@ git log --patch --reverse > data.diff
 - Generates the commit history table for the last section, including the correct links
 
 ```bash
- node node_modules/@kaiosilveira/refactoring-catalog-cli/dist [REPOSITORY_NAME]
+ node node_modules/@kaiosilveira/refactoring-catalog-cli/dist slide-statements-refactoring
 ```
 
 ---
@@ -46,7 +28,7 @@ git log --patch --reverse > data.diff
 
 # Refactoring name
 
-**Formerly: Old name**
+**Formerly: Consolidate Duplicate Conditional Fragments**
 
 <table>
 <thead>
@@ -58,7 +40,10 @@ git log --patch --reverse > data.diff
 <td>
 
 ```javascript
-result = initial.code;
+const pricingPlan = retrievePricingPlan();
+const order = retrieveOrder();
+let charge;
+const chargePerUnit = pricingPlan.unit;
 ```
 
 </td>
@@ -66,19 +51,16 @@ result = initial.code;
 <td>
 
 ```javascript
-result = newCode();
-
-function newCode() {
-  return 'new code';
-}
+const pricingPlan = retrievePricingPlan();
+const chargePerUnit = pricingPlan.unit;
+const order = retrieveOrder();
+let charge;
 ```
 
 </td>
 </tr>
 </tbody>
 </table>
-
-**Inverse of: [Another refactoring](https://github.com/kaiosilveira/refactoring)**
 
 **Refactoring introduction and motivation** dolore sunt deserunt proident enim excepteur et cillum duis velit dolor. Aute proident laborum officia velit culpa enim occaecat officia sunt aute labore id anim minim. Eu minim esse eiusmod enim nulla Lorem. Enim velit in minim anim anim ad duis aute ipsum voluptate do nulla. Ad tempor sint dolore et ullamco aute nulla irure sunt commodo nulla aliquip.
 
@@ -126,10 +108,10 @@ And that's it!
 
 Below there's the commit history for the steps detailed above.
 
-| Commit SHA                                                                  | Message                  |
-| --------------------------------------------------------------------------- | ------------------------ |
-| [cmt-sha-1](https://github.com/kaiosilveira/[REPOSITORY_NAME]/commit-SHA-1) | description of commit #1 |
-| [cmt-sha-2](https://github.com/kaiosilveira/[REPOSITORY_NAME]/commit-SHA-2) | description of commit #2 |
-| [cmt-sha-n](https://github.com/kaiosilveira/[REPOSITORY_NAME]/commit-SHA-n) | description of commit #n |
+| Commit SHA                                                                             | Message                  |
+| -------------------------------------------------------------------------------------- | ------------------------ |
+| [cmt-sha-1](https://github.com/kaiosilveira/slide-statements-refactoring/commit-SHA-1) | description of commit #1 |
+| [cmt-sha-2](https://github.com/kaiosilveira/slide-statements-refactoring/commit-SHA-2) | description of commit #2 |
+| [cmt-sha-n](https://github.com/kaiosilveira/slide-statements-refactoring/commit-SHA-n) | description of commit #n |
 
-For the full commit history for this project, check the [Commit History tab](https://github.com/kaiosilveira/[REPOSITORY_NAME]/commits/main).
+For the full commit history for this project, check the [Commit History tab](https://github.com/kaiosilveira/slide-statements-refactoring/commits/main).

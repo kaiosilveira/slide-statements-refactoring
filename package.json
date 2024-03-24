@@ -1,20 +1,18 @@
 {
   "type": "module",
-  "name": "refactoring-catalog-template",
+  "name": "slide-statements-refactoring",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/kaiosilveira/refactoring-catalog-template.git",
+  "main": "src/index.js",
+  "repository": "https://github.com/kaiosilveira/slide-statements-refactoring.git",
   "author": "Kaio Silveira <silveira.kaio@icloud.com>",
   "license": "MIT",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest /src --passWithNoTests",
     "test:tooling": "NODE_OPTIONS=--experimental-vm-modules jest /tooling --passWithNoTests",
-    "template:generate-cmt-table": "node ./tooling/create-commit-history-table/index.js"
+    "template:generate-cmt-table": "npx @kaiosilveira/refactoring-catalog-cli generate-cmt-table"
   },
   "devDependencies": {
-    "jest": "^29.0.3"
-  },
-  "dependencies": {
-    "@kaiosilveira/refactoring-catalog-cli": "^0.0.2"
+    "jest": "^29.0.3",
+    "@kaiosilveira/refactoring-catalog-cli": "^0.0.22"
   }
 }
