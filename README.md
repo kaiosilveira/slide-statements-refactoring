@@ -1,32 +1,10 @@
 [![Continuous Integration](https://github.com/kaiosilveira/slide-statements-refactoring/actions/workflows/ci.yml/badge.svg)](https://github.com/kaiosilveira/slide-statements-refactoring/actions/workflows/ci.yml)
 
-# Refactoring catalog repository template
-
-This is a quick template to help me get a new refactoring repo going.
-
-## Things to do after creating a repo off of this template
-
-3. Replace the lorem ipsum text sections below with actual text
-
-## Useful commands
-
-- Generate a patch diff and write the result to a file:
-
-```bash
-git log --patch --reverse > data.diff
-```
-
-- Generates the commit history table for the last section, including the correct links
-
-```bash
- node node_modules/@kaiosilveira/refactoring-catalog-cli/dist slide-statements-refactoring
-```
+ℹ️ _This repository is part of my Refactoring catalog based on Fowler's book with the same title. Please see [kaiosilveira/refactoring](https://github.com/kaiosilveira/refactoring) for more details._
 
 ---
 
-ℹ️ _This repository is part of my Refactoring catalog based on Fowler's book with the same title. Please see [kaiosilveira/refactoring](https://github.com/kaiosilveira/refactoring) for more details._
-
-# Refactoring name
+# Slide statements
 
 **Formerly: Consolidate Duplicate Conditional Fragments**
 
@@ -62,56 +40,97 @@ let charge;
 </tbody>
 </table>
 
-**Refactoring introduction and motivation** dolore sunt deserunt proident enim excepteur et cillum duis velit dolor. Aute proident laborum officia velit culpa enim occaecat officia sunt aute labore id anim minim. Eu minim esse eiusmod enim nulla Lorem. Enim velit in minim anim anim ad duis aute ipsum voluptate do nulla. Ad tempor sint dolore et ullamco aute nulla irure sunt commodo nulla aliquip.
+Code is usually read way more times than it is written, and when one is reading code, simple things such as the order in which each statement appears in the code can either aid or inhibit understanding. This tiny refactoring helps in identifying and improving such cases.
 
 ## Working example
 
-**Working example general explanation** proident reprehenderit mollit non voluptate ea aliquip ad ipsum anim veniam non nostrud. Cupidatat labore occaecat labore veniam incididunt pariatur elit officia. Aute nisi in nulla non dolor ullamco ut dolore do irure sit nulla incididunt enim. Cupidatat aliquip minim culpa enim. Fugiat occaecat qui nostrud nostrud eu exercitation Lorem pariatur fugiat ea consectetur pariatur irure. Officia dolore veniam duis duis eu eiusmod cupidatat laboris duis ad proident adipisicing. Minim veniam consectetur ut deserunt fugiat id incididunt reprehenderit.
+Our working example, extracted from the book, is a function that allocates a resource either by fetching it from a list of `availableResources` or creating a new one on the fly. The allocated resource is returned as the result of the function. The function itself looks like this:
+
+```javascript
+export const allocateResource = () => {
+  let result;
+
+  if (availableResources.length === 0) {
+    result = createResource();
+    allocatedResources.push(result);
+  } else {
+    result = availableResources.pop();
+    allocatedResources.push(result);
+  }
+
+  return result;
+};
+```
+
+PS: In the working code, a thin wrapper containing an "environment" had to be added so this function could be properly unit-tested. The general behavior remains the same, though.
 
 ### Test suite
 
-Occaecat et incididunt aliquip ex id dolore. Et excepteur et ea aute culpa fugiat consectetur veniam aliqua. Adipisicing amet reprehenderit elit qui.
+The test suite is also pretty straightforward — we cover both the case when a new resource is created on the fly and when an available resource is returned:
 
 ```javascript
-describe('functionBeingRefactored', () => {
-  it('should work', () => {
-    expect(0).toEqual(1);
+describe('allocateResource', () => {
+  const createResource = jest.fn();
+
+  beforeEach(() => jest.clearAllMocks());
+
+  it('should create a resource and allocate it if no resources are available', () => {
+    const newResource = { id: randomUUID() };
+    createResource.mockReturnValue(newResource);
+
+    const data = { allocatedResources: [], availableResources: [] };
+    const env = { data, fns: { createResource } };
+
+    const result = allocateResource(env)();
+
+    expect(result).toEqual(newResource);
+  });
+
+  it('should allocate an available resource', () => {
+    const availableResource = { id: randomUUID() };
+    const data = { allocatedResources: [], availableResources: [availableResource] };
+    const env = { data, fns: { createResource } };
+
+    const result = allocateResource(env)();
+
+    expect(result).toEqual(availableResource);
   });
 });
 ```
 
-Magna ut tempor et ut elit culpa id minim Lorem aliqua laboris aliqua dolor. Irure mollit ad in et enim consequat cillum voluptate et amet esse. Fugiat incididunt ea nulla cupidatat magna enim adipisicing consequat aliquip commodo elit et. Mollit aute irure consequat sunt. Dolor consequat elit voluptate aute duis qui eu do veniam laborum elit quis.
+With the unit tests in place, we're safe to move forward.
 
 ### Steps
 
-**Step 1 description** mollit eu nulla mollit irure sint proident sint ipsum deserunt ad consectetur laborum incididunt aliqua. Officia occaecat deserunt in aute veniam sunt ad fugiat culpa sunt velit nulla. Pariatur anim sit minim sit duis mollit.
+In our case, the statement `allocatedResource.push(result)` is duplicated in both legs of the conditional and screaming to be slid out of them. We can move forward and do it:
 
 ```diff
-diff --git a/src/price-order/index.js b/src/price-order/index.js
-@@ -3,6 +3,11 @@
--module.exports = old;
-+module.exports = new;
+diff --git a/src/index.js b/src/index.js
+@@ -5,11 +5,11 @@
+     if (availableResources.length === 0) {
+       result = createResource();
+-      allocatedResources.push(result);
+     } else {
+       result = availableResources.pop();
+-      allocatedResources.push(result);
+     }
+
++    allocatedResources.push(result);
++
+     return result;
+   };
 ```
 
-**Step n description** mollit eu nulla mollit irure sint proident sint ipsum deserunt ad consectetur laborum incididunt aliqua. Officia occaecat deserunt in aute veniam sunt ad fugiat culpa sunt velit nulla. Pariatur anim sit minim sit duis mollit.
+After that, we can run the unit tests to make sure that they still pass, and we're done!
 
-```diff
-diff --git a/src/price-order/index.js b/src/price-order/index.js
-@@ -3,6 +3,11 @@
--module.exports = old;
-+module.exports = new;
-```
-
-And that's it!
+Although simple, this practice has profound implications for the structure and readability of our programs. It also serves as a preparatory step for more elaborate refactorings, such as **[Extract Function](https://github.com/kaiosilveira/extract-function-refactoring/tree/1cba8ddb894d94f3e2528bcc184942cdf4de1103)**.
 
 ### Commit history
 
 Below there's the commit history for the steps detailed above.
 
-| Commit SHA                                                                             | Message                  |
-| -------------------------------------------------------------------------------------- | ------------------------ |
-| [cmt-sha-1](https://github.com/kaiosilveira/slide-statements-refactoring/commit-SHA-1) | description of commit #1 |
-| [cmt-sha-2](https://github.com/kaiosilveira/slide-statements-refactoring/commit-SHA-2) | description of commit #2 |
-| [cmt-sha-n](https://github.com/kaiosilveira/slide-statements-refactoring/commit-SHA-n) | description of commit #n |
+| Commit SHA                                                                                                              | Message                                                              |
+| ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [4e15f72](https://github.com/kaiosilveira/slide-statements-refactoring/commit/4e15f72e0a8e1d8d82d6df1e0e1ce37bc7747972) | slide `allocatedResources.push(result)` out of conditional statement |
 
 For the full commit history for this project, check the [Commit History tab](https://github.com/kaiosilveira/slide-statements-refactoring/commits/main).
